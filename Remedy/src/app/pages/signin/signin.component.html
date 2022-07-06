@@ -1,1 +1,62 @@
-<p>signin works!</p>
+<div class="bootstrap-wrapper ">
+  <div class="container ">
+    <div class="row p.ex1 " style="margin-top: 50px">
+      <div class="col-md-6 offset-md-3" style="border: 2.5px solid rgb(109, 107, 107);">
+        <mat-card  >
+        <div class="container text-center">
+            
+          <img
+            src="../../../assets/logo.jpg "
+            alt="medicine logo"
+            height="250"
+            width="250"
+          />
+        </div>
+        <h3 class="text-center">Sign in here!!</h3>
+        <!-- User name field -->
+        <form action="">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>User Name</mat-label>
+            <input
+              required
+              name="username"
+              matInput
+              placeholder="Input Here"
+            />
+            <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
+            <!-- <mat-hint>Hint:Abid123(Must be valid!)</mat-hint> -->
+          </mat-form-field>
+
+           <mat-form-field class="full-width" appearance="fill">
+            <mat-label>User Password</mat-label>
+            <input
+              required
+              name="password"
+              matInput
+              placeholder="Input Here"
+            />
+            <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
+            <!-- <mat-hint>Hint:akash123(Muat be valid!)</mat-hint> -->
+          </mat-form-field>
+          <div class="container text-center">
+            <button
+              type="submit"
+              mat-raised-button
+              color="primary"
+              background-color:
+              blue
+            >
+              Sing in
+            </button>
+              <button class="ml20" mat-raised-button color="accent">
+              Reset
+            </button>
+          </div>
+         
+        </form>
+         </mat-card>
+       
+      </div>
+    </div>
+  </div>
+</div>

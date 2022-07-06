@@ -1,3 +1,8 @@
 .full-width{
     width: 100%;
 }
+
+.abc{
+border-style: solid;
+    border-color: rgba(201, 76, 76, 0.3);
+}
