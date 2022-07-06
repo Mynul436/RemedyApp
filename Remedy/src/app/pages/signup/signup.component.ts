@@ -11,9 +11,9 @@ import Swal from 'sweetalert2'
 export class SignupComponent implements OnInit {
   constructor(private userService: UserService, private snack: MatSnackBar) {}
   public user = {
-    firstname: '',
-    lastname: '',
-    username: '',
+    firstName: '',
+    lastName: '',
+    userName: '',
     password: '',
     email: '',
     phone: '',
@@ -23,7 +23,7 @@ export class SignupComponent implements OnInit {
   formSubmit() {
     alert('submit');
 
-    if (this.user.firstname == '' || this.user.firstname == null) {
+    if (this.user.firstName == '' || this.user.firstName == null) {
       // alert('FirstName  field is required!');
       this.snack.open('First Name is Required!!', 'ok', {
         duration: 3000,
@@ -32,14 +32,14 @@ export class SignupComponent implements OnInit {
       return;
     }
 
-    if (this.user.lastname == '' || this.user.lastname == null) {
+    if (this.user.lastName == '' || this.user.lastName == null) {
       // alert('lastname  field is required!');
       this.snack.open('Last Name is Required!!', 'ok', {
         duration: 3000,
       });
       return;
     }
-    if (this.user.username == '' || this.user.username == null) {
+    if (this.user.userName == '' || this.user.userName == null) {
       // alert('username  field is required!');
       this.snack.open('User Name is Required!!', 'ok', {
         duration: 3000,
