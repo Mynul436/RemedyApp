@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,11 +21,15 @@ import com.example.demo.model.Users;
 public class MainController {
 	@Autowired
 	UserRepo repo;
-      
+     
 	@PostMapping(path="/adduser",produces= {"application/json"},consumes= {"application/json"})
 	@ResponseBody
 	public ResponseEntity<ErrorResponse>  addUser(@RequestBody Users user)
 	{
+		PasswordEncoder p=new BCryptPasswordEncoder();
+		 
+		String password=p.encode(user.getPassword());
+		user.setPassword(password);
 		
 		System.out.println(user.getFirstName());
 		List list1=repo.findByPhoneNumber(user.getPhoneNumber());
