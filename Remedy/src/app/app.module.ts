@@ -10,6 +10,15 @@ import { SignupComponent } from './pages/signup/signup.component';
 import { SigninComponent } from './pages/signin/signin.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import{HttpClientModule} from '@angular/common/http';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { HomeComponent } from './pages/home/home.component';
+import {MatCardModule} from '@angular/material/card';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
+import{from } from 'rxjs'
 
 
 @NgModule({
@@ -19,6 +28,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     FooterComponent,
     SignupComponent,
     SigninComponent,
+    HomeComponent,
 
   ],
   imports: [
@@ -26,7 +36,14 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatButtonModule,
+    FormsModule,
+    HttpClientModule,
+    MatSnackBarModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
