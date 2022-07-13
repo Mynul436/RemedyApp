@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,17 +13,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.dao.MedicineRepo;
 import com.example.demo.dao.UserRepo;
 import com.example.demo.help.ErrorResponse;
 import com.example.demo.model.AuthRequest;
+import com.example.demo.model.Medicine;
 import com.example.demo.model.Users;
+import com.example.demo.service.FileUpload;
 import com.example.demo.util.JwtUtil;
 
 
 @Controller
 public class MainController {
+	@Autowired
+	FileUpload fileup;
+	@Autowired
+	MedicineRepo mediRepo;
 	@Autowired
 	UserRepo repo;
 	@Autowired
@@ -85,5 +95,29 @@ public class MainController {
 		return ResponseEntity.status(400).body(new ErrorResponse("Invalid username/password","400"));
 	}
 	}
-
+	@PostMapping(path="/addmedicine",produces= {"application/json"})
+	@ResponseBody
+	public ResponseEntity<ErrorResponse> addMedicine(@RequestParam("medicineImage") MultipartFile image, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("company") String company){
+		if(image.getOriginalFilename().contains("png")||image.getOriginalFilename().contains("jpg")||image.getOriginalFilename().contains("jpeg")){
+	   Medicine medi=new Medicine();
+	   medi.setCompany(company);
+	   medi.setDesc(description);
+	   medi.setFileName(image.getOriginalFilename()+new Date());
+	   medi.setName(name);
+	   String msg=fileup.fileUpload(image);
+	   if(!msg.equals("Error"))
+	   {
+		medi.setFileName(msg);
+		medi.setId((int) (new Date().getTime()));
+		mediRepo.save(medi);
+		return ResponseEntity.status(200).body(new ErrorResponse("Medicine added sucessfully","200"));
+	   }
+	   else
+		return ResponseEntity.status(500).body(new ErrorResponse("There was an error while uploading the file","500"));
 	}
+	else
+	{
+		return ResponseEntity.status(400).body(new ErrorResponse("Only png, jpg and jpeg format is allowed","400"));
+	}
+	}
+}
