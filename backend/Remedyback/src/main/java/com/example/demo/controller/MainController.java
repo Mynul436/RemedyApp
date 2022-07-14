@@ -10,11 +10,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dao.MedicineRepo;
@@ -27,8 +30,12 @@ import com.example.demo.service.FileUpload;
 import com.example.demo.util.JwtUtil;
 
 
-@Controller
+@RestController
 public class MainController {
+	/**
+	 *
+	 */
+	private static final String USERS_ID = "/users/{id}";
 	@Autowired
 	FileUpload fileup;
 	@Autowired
@@ -40,6 +47,30 @@ public class MainController {
     @Autowired
     private AuthenticationManager authenticationManager;
 	PasswordEncoder p=new BCryptPasswordEncoder();
+
+    @GetMapping(value=USERS_ID)
+	public ResponseEntity<?> getProfileDetails(@PathVariable("id") String username)
+	{
+        Users us=repo.findByUserName(username);
+		if(us!=null)
+		return ResponseEntity.ok(us);
+		else
+		return ResponseEntity.of(Optional.of(new ErrorResponse("No username found","400")));
+
+	}
+    @DeleteMapping(value=USERS_ID)
+	public ResponseEntity<?> deleteUser(@PathVariable("id") String userName)
+	{
+		Users us=repo.findByUserName(userName);
+		if(us!=null)
+		{
+			return ResponseEntity.of(Optional.of(new ErrorResponse("Successfully deleted","200")));
+
+		}
+else 
+		return ResponseEntity.status(400).body(new ErrorResponse("No username found","400"));
+	}
+
 	@PostMapping(path="/adduser",produces= {"application/json"},consumes= {"application/json"})
 	@ResponseBody
 	public ResponseEntity<ErrorResponse>  addUser(@RequestBody Users user)
@@ -97,18 +128,22 @@ public class MainController {
 	}
 	@PostMapping(path="/addmedicine",produces= {"application/json"})
 	@ResponseBody
-	public ResponseEntity<ErrorResponse> addMedicine(@RequestParam("medicineImage") MultipartFile image, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("company") String company){
+	public ResponseEntity<ErrorResponse> addMedicine(@RequestParam("medicineImage") MultipartFile image, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("company") String company,@RequestParam("mg") int mg,@RequestParam("category") String category,@RequestParam("price") int price, @RequestParam("quantity") int quantity){
 		if(image.getOriginalFilename().contains("png")||image.getOriginalFilename().contains("jpg")||image.getOriginalFilename().contains("jpeg")){
 	   Medicine medi=new Medicine();
 	   medi.setCompany(company);
 	   medi.setDesc(description);
 	   medi.setFileName(image.getOriginalFilename()+new Date());
 	   medi.setName(name);
+	   medi.setCategory(category);
+	   medi.setMg(mg);
+	   medi.setPrice(price);
+	   medi.setQuantity(quantity);
 	   String msg=fileup.fileUpload(image);
 	   if(!msg.equals("Error"))
 	   {
 		medi.setFileName(msg);
-		medi.setId((int) (new Date().getTime()));
+		medi.setId((Long) (new Date().getTime()));
 		mediRepo.save(medi);
 		return ResponseEntity.status(200).body(new ErrorResponse("Medicine added sucessfully","200"));
 	   }
@@ -120,4 +155,7 @@ public class MainController {
 		return ResponseEntity.status(400).body(new ErrorResponse("Only png, jpg and jpeg format is allowed","400"));
 	}
 	}
+
+   
+
 }

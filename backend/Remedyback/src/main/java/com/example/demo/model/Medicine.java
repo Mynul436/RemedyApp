@@ -6,15 +6,50 @@ import javax.persistence.Id;
 @Entity
 public class Medicine {
     @Id
-    private int id;
+    private Long id;
     private String name;
     private String description;
     private String fileName;
     private String company;
-    public int getId() {
+    private String category;
+    private int price;
+    private int mg;
+    private int quantity;
+
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public String getCategory() {
+        return category;
+    }
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    public int getPrice() {
+        return price;
+    }
+    public void setPrice(int price) {
+        this.price = price;
+    }
+    public int getMg() {
+        return mg;
+    }
+    public void setMg(int mg) {
+        this.mg = mg;
+    }
+    public int getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    public Long getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getName() {
