@@ -14,7 +14,7 @@ private String lastName;
 private String userName;
 private String password;
 private String email;
-private String phoneNumber;
+private String phone;
 private String type;
 public String getType() {
 	return type;
@@ -62,11 +62,11 @@ public String getEmail() {
 public void setEmail(String email) {
 	this.email = email;
 }
-public String getPhoneNumber() {
-	return phoneNumber;
+public String getPhone() {
+	return phone;
 }
-public void setPhoneNumber(String phoneNumber) {
-	this.phoneNumber = phoneNumber;
+public void setPhone(String phoneNumber) {
+	this.phone = phoneNumber;
 }
 
 }

@@ -21,10 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dao.MedicineRepo;
+import com.example.demo.dao.OrderRepo;
 import com.example.demo.dao.UserRepo;
 import com.example.demo.help.ErrorResponse;
 import com.example.demo.model.AuthRequest;
 import com.example.demo.model.Medicine;
+import com.example.demo.model.Orders;
 import com.example.demo.model.Users;
 import com.example.demo.service.FileUpload;
 import com.example.demo.util.JwtUtil;
@@ -32,10 +34,9 @@ import com.example.demo.util.JwtUtil;
 
 @RestController
 public class MainController {
-	/**
-	 *
-	 */
 	private static final String USERS_ID = "/users/{id}";
+	@Autowired
+	OrderRepo orderRepo;
 	@Autowired
 	FileUpload fileup;
 	@Autowired
@@ -70,7 +71,26 @@ public class MainController {
 else 
 		return ResponseEntity.status(400).body(new ErrorResponse("No username found","400"));
 	}
-
+	@PostMapping(path="/users/neworder",produces= {"application/json"},consumes= {"application/json"})
+	@ResponseBody
+	public ResponseEntity<?> newOrder(@RequestBody Orders order)
+	{
+		try{
+		if(order.getAddress()!=null&&order.getPhone()!=null&&order.getName()!=null&&order.getEmail()!=null&&order.getUsername()!=null&&order.getAddress().length()>=6&&order.getPhone().length()==11&&order.getEmail().length()>=7&&order.getName().length()>=4)
+		{
+			orderRepo.save(order);
+			return ResponseEntity.ok(new ErrorResponse("Medicine ordered successfully", "200"));
+		}
+		else
+		{
+			return ResponseEntity.status(400).body(new ErrorResponse("Medicine cannot be ordered now", "400"));
+		}
+	}
+	catch(Exception e)
+	{
+		return ResponseEntity.status(500).body(new ErrorResponse("Internal server error", "500"));
+	}
+	}
 	@PostMapping(path="/adduser",produces= {"application/json"},consumes= {"application/json"})
 	@ResponseBody
 	public ResponseEntity<ErrorResponse>  addUser(@RequestBody Users user)
@@ -81,12 +101,13 @@ else
 		user.setPassword(password);
 		
 		System.out.println(user.getFirstName());
-		List list1=repo.findByPhoneNumber(user.getPhoneNumber());
+		List list1=repo.findByPhone(user.getPhone());
 		List list2=repo.findByEmail(user.getEmail());
 		Users list3=repo.findByUserName(user.getUserName());
 		
 		if(list1.isEmpty()&&list2.isEmpty()&&list3==null)
 		{
+	
 			repo.save(user);
 			return ResponseEntity.of(Optional.of(new ErrorResponse("Successfully Registered","200")));
 		}
@@ -99,6 +120,8 @@ else
 		else
 			return ResponseEntity.status(400).body(new ErrorResponse("Username Already in use","400"));
 	}
+	
+
 	@PostMapping(path="/login",produces= {"application/json"},consumes= {"application/json"})
 	@ResponseBody
 	public ResponseEntity<ErrorResponse> login(@RequestBody AuthRequest authRequest){
@@ -156,6 +179,5 @@ else
 	}
 	}
 
-   
-
+    
 }
